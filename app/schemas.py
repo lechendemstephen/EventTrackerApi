@@ -24,4 +24,5 @@ class EventBase(BaseModel):
 class Event(EventBase): 
     pass 
 
-
+class TokenData(BaseModel):
+    id: str 
