@@ -17,12 +17,20 @@ class LoginBase(BaseModel):
 class Login(LoginBase): 
     pass 
 
+
 class EventBase(BaseModel): 
     title: str
     description: str 
 
-class Event(EventBase): 
-    pass 
+class Event(BaseModel): 
+    title: str
+    description: str 
+
+    class Config: 
+        orm_mode = True
+
+class CreateEvent(EventBase): 
+    id: int
 
 class TokenData(BaseModel):
     id: str 

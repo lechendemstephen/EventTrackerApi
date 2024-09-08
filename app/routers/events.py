@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from .. import database, schemas, models
+from .. import database, schemas, models, oath2
 
 router = APIRouter(
     tags= ['Events'], 
@@ -19,10 +19,10 @@ def all_events(db: Session = Depends(database.get_db)):
 
 # create Event
 @router.post('/')
-def create_event(event: schemas.Event, db: Session = Depends(database.get_db)): 
+def create_event(event: schemas.Event, db: Session = Depends(database.get_db), logged_user: int = Depends(oath2.get_current_user)): 
 
     new_event = models.Events(
-        **event.dict()
+       owner_id=logged_user.id, **event.dict()
     )
     db.add(new_event)
     db.commit()
@@ -66,7 +66,7 @@ def update_event(id: int, db: Session = Depends(database.get_db)):
     for key, value in event.items.dict():
         if not value: 
             setattr(event, key, value)
-            
+
     return event
 
 
